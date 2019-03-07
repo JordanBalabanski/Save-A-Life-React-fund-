@@ -14,6 +14,10 @@ const commentSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'Animal'
+  },
+  creationDate: {
+    type: String,
+    default: `${new Date().getHours}:${new Date().getMinutes} ${new Date().getDay} ${new Date().getMonth} ${new Date().getFullYear}`
   }
 });
 

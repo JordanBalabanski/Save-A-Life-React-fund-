@@ -14,9 +14,17 @@ const animalSchema = new Schema({
     type: String,
     required: true
   },
-  imageUrl: {
+  imageUrl: [{
     type: String,
     required: true
+  }],
+  contactName: {
+    type: String,
+    required: true
+  },
+  contactInfo: {
+    type: String,
+    default: 'Sorry, the user hasn\'t provided contact info. Try the comment section below to connect.'
   },
   comments: [{
     type: Schema.Types.ObjectId,

@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const feedRoutes = require('./routes/feed');
+const animalRoutes = require('./routes/animal');
 const authRoutes = require('./routes/auth');
+// const formidable = require('express-formidable');
 require('./database/database')();
 const port = 9999;
 const app = express();
@@ -9,13 +10,18 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(bodyParser.json());
+// app.use(formidable({
+//   encoding: 'utf-8',
+//   uploadDir: '/content/images/uploads',
+//   multiples: true, // req.files to be arrays of files
+// }));
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
-// app.use('/feed', feedRoutes);
+app.use('/animal', animalRoutes);
 app.use('/auth', authRoutes);
 
 // General error handling
