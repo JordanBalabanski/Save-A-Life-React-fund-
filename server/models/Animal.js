@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const animalSchema = new Schema({
   creator: {
     type: Schema.Types.ObjectId,
+    required: true,
     ref: 'User'
   },
   title: {
@@ -14,7 +15,12 @@ const animalSchema = new Schema({
     type: String,
     required: true
   },
-  imageUrl: [{
+  category: {
+    type: String,
+    required: true,
+    enum: ['cat', 'dog', 'other']
+  },
+  imageUrls: [{
     type: String,
     required: true
   }],

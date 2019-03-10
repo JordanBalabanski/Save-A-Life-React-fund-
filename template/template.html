@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <style>
+        body {
+            border: 1px solid black;
+            margin: 0.5rem 1.5rem;
+            background-color: rgb(174, 210, 250);
+            font-family: 'Ubuntu',
+            serif;
+            font-size: 20px;
+        }
+
+        main {
+            width: 50%;
+            margin: 0.5rem auto;
+        }
+
+        form {
+            padding: 0.5rem 2rem;
+        }
+
+        .logo {
+            width: 6vw;
+        }
+    </style>
+    <title>Save a Life</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div>
+                <a href="#">
+                    <img class="logo" src="./Save a Life Logo.png" />
+                </a>
+            </div>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">View Animals</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My Animals</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav mr-right mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Register <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Login</a>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link">Welcome, Pesho!</span>
+                </li>
+                <li class="nav-item">
+                    <!-- <form class="form-inline my-2 my-lg-0">
+                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Logout</button>
+                    </form> -->
+                    <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <div>
+            <h1>Welcome to "Save a life"!</h1>
+            <p>
+                The idea of "Save a life" is to help animals in need. Here you can either make a posts for an animal
+                you've found and help it find a new home, or be the one giving it shelter. Every post has photos, title
+                and description with information about the animal, plus contact information. Also there is a comment
+                section if you can't seem to contact the user. Everything is free in the name of the animals.
+            </p>
+            <p>
+                From all of us in "Save a life", we thank you for joining us and helping our team to make this world a
+                better place!
+            </p>
+        </div>
+
+
+        <form>
+            <h1>Register</h1>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username" aria-describedby="usernameHelp"
+                    placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm password</label>
+                <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm password">
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+
+        <form>
+            <h1>Login</h1>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username" aria-describedby="usernameHelp"
+                    placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <form>
+            <h1>Create a post</h1>
+            <div class="form-group">
+                <label for="images">Upload photos</label>
+                <input type="file" class="form-control" name="images" id="images">
+            </div>
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" name="title" id="title" aria-describedby="titleHelp"
+                    placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" name="description" id="description" aria-describedby="descriptionHelp"
+                    placeholder="Enter description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="category">Select category</label>
+                <select class="form-control" name="category" id="category">
+                    <option value="dog">Dog</option>
+                    <option value="cat">Cat</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="contactName">Contact Name</label>
+                <input type="text" class="form-control" name="contactName" id="contactName" placeholder="Enter contact name">
+            </div>
+            <div class="form-group">
+                <label for="contactInfo">Contact Info</label>
+                <input type="text" class="form-control" name="contactInfo" id="contactInfo" placeholder="Enter contact info">
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                            <img class="card-img-top" src="https://firebasestorage.googleapis.com/v0/b/save-a-life-acf11.appspot.com/o/images%2Fdog1.jpg?alt=media&token=fbbe140c-fa93-4780-8d20-e77cd9bbca4f"
+                                alt="Card image cap">
+                            <hr>
+                            <div class="card-body">
+                                <p class="card-text">Title</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                            <img class="card-img-top" src="https://firebasestorage.googleapis.com/v0/b/save-a-life-acf11.appspot.com/o/images%2Fdog1.jpg?alt=media&token=fbbe140c-fa93-4780-8d20-e77cd9bbca4f"
+                                alt="Card image cap">
+                            <hr>
+                            <div class="card-body">
+                                <p class="card-text">Title</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-copyright text-center py-3">© 2019 Copyright: J.B.
+    </footer>
+</body>
+
+</html>

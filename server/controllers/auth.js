@@ -29,8 +29,18 @@ module.exports = {
         salt,
         roles: ['user']
       }).then((user) => {
+        const token = jwt.sign({ 
+          username: user.username,
+          userId: user._id.toString()
+        }
+        , 'somesupersecret'
+        , { expiresIn: '1h' });
+
         res.status(201)
-          .json({ message: 'User created!', userId: user._id, username: user.username });
+          .json({ message: 'User created!', 
+          token, 
+          userId: user._id, 
+          username: user.username});
       })
       .catch((error) => {
         if (!error.statusCode) {
@@ -70,7 +80,8 @@ module.exports = {
              message: 'You successfully logged in!', 
              token, 
              userId: user._id.toString(),
-             username: user.username
+             username: user.username, 
+             isAdmin: user.roles.includes('admin') 
            });
       })
       .catch(error => {

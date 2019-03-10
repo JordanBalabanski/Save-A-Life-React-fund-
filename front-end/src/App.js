@@ -1,18 +1,58 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { storage } from './firebase/index';
 import './App.css';
+import Header from './components/HeaderAndFooter/Header';
+import Footer from './components/HeaderAndFooter/Footer';
+import Home from './components/Home/Home';
+import Animals from './components/Animals/Animals';
+import RegisterForm from './components/RegisterForm/RegisterForm';
+import LoginForm from './components/LoginForm/LoginForm';
+import CreateForm from './components/CreateForm/CreateForm';
+import Details from './components/PostDetails/Details';
+
+import NotFound from './components/NotFound/NotFound';
 
 class App extends Component {
   constructor(props){
     super(props);
 
     this.state = {
-      title: null,
-      description: null,
-      image: null,
-      imageUrl: null,
-      contactName: null
+      username: sessionStorage.getItem('username'),
+      isAdmin: sessionStorage.getItem('isAdmin')
     }
+  }
+
+  register = (user) => {
+    fetch(`http://localhost:9999/auth/signup`, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify(user)
+    }).then(res => res.json())
+    .then((data) => {
+      this.login({username: user.username, password: user.password})
+    })
+  }
+
+  login(user) {
+    fetch(`http://localhost:9999/auth/signin`, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify(user)
+    }).then(res => res.json())
+    .then(body => {
+        const { message, token, userId, username, isAdmin } = body
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('userId', userId);
+        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('isAdmin', isAdmin);
+        this.setState({username: sessionStorage.getItem('username')});
+    })
+    .catch(err => console.log(err));
   }
 
   onSubmit = (event) => {
@@ -70,54 +110,20 @@ class App extends Component {
 
   render() {
     return (
-      // <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      //   <a className="navbar-brand" href="#">Navbar</a>
-      //   <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      //     <span className="navbar-toggler-icon"></span>
-      //   </button>
-
-      //   <div className="collapse navbar-collapse" id="navbarSupportedContent">
-      //     <ul className="navbar-nav mr-auto">
-      //       <li className="nav-item active">
-      //         <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
-      //       </li>
-      //       <li className="nav-item">
-      //         <a className="nav-link" href="#">Link</a>
-      //       </li>
-      //       <li className="nav-item dropdown">
-      //         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      //           Dropdown
-      //         </a>
-      //         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-      //           <a className="dropdown-item" href="#">Action</a>
-      //           <a className="dropdown-item" href="#">Another action</a>
-      //           <div className="dropdown-divider"></div>
-      //           <a className="dropdown-item" href="#">Something else here</a>
-      //         </div>
-      //       </li>
-      //       <li className="nav-item">
-      //         <a className="nav-link disabled" href="#">Disabled</a>
-      //       </li>
-      //     </ul>
-      //     <form className="form-inline my-2 my-lg-0">
-      //       <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-      //       <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      //     </form>
-      //   </div>
-      // </nav>
       <div className="App">
-        <form onSubmit={this.onSubmit} encType="multipart/form-data">
-          <label>Title: </label>
-          <input type="text" name="title" onChange={this.onChange} />
-          <label>Description: </label>
-          <input type="text" name="description" onChange={this.onChange} />
-          <label>Contact Name: </label>
-          <input type="text" name="contactName" onChange={this.onChange} />
-          <label>Image: </label>
-          <input type="file" multiple={true} name="image" onChange={this.onChange} />
-          <button onClick={this.handleUpload.bind(this)}>Upload</button>
-          <input type="submit" value="Submit" />
-        </form>
+        <Header username={this.state.username}/>
+        <main>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/animals" component={() => <Animals />} />
+              <Route exact path="/animal/:id" component={() => <Details />} />
+              <Route exact path="/register" render={() => <RegisterForm register={this.register} />} />
+              <Route exact path="/login" component={() => <LoginForm login={this.login} />} />
+              <Route exact path="/create-post" component={() => <CreateForm />} />
+              <Route component={NotFound} />
+            </Switch>
+        </main>
+        <Footer />
       </div>
     );
   }
