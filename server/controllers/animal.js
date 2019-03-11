@@ -45,10 +45,8 @@ module.exports = {
   detailsAnimal: (req, res) => {
     const { id } = req.params;
 
-    Animal.find()
-      .populate('creator')
-      .populate('comments')
-      .then(animal => {
+    Animal.findById(id)
+      .then((animal) => {
         res
           .status(200)
           .json(animal)
