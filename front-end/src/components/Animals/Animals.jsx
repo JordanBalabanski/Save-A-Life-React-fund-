@@ -46,9 +46,9 @@ class Animals extends Component {
                 {
                     animals.map((animal) => ((
                         <div className="col-md-4" key={animal._id}>
-                            <Link to={`animal/${animal._id}`} >
+                            <Link to={`/animal/${animal._id}`} >
                             <div className="card mb-4 box-shadow">
-                                <img className="card-img-top" src={animal.imageUrls[0]}
+                                <img className="card-img-top" src={animal.imageUrl}
                                     alt="Animal in need" />
                                 <hr />
                                 <div className="card-body">

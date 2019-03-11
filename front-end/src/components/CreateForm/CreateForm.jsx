@@ -13,62 +13,61 @@ class App extends Component {
             title: null,
             description: null,
             category: null,
-            images: [],
-            imageUrls: [],
+            image: null,
+            // imageUrls: [],
             contactName: null,
             contactInfo: null,
             redirect: false
         }
     }
 
-    onSubmit = (event) => {
+    onSubmit = async function (event) {
         event.preventDefault();
 
-        const {images} = this.state;
-
-        images.forEach(img => {
-        const uploadTask = storage.ref(`images/${img.name}`).put(img);
+        const {image} = this.state;
+        const uploadTask = storage.ref(`images/${image.name}`).put(image);
         uploadTask.on('state_changed', 
-        (snapshot) => {
-            // progrss function ....
-        }, 
-        (error) => {
-            // error function ....
-            console.log(error);
-        }, 
-        () => {
-            // complete function ....
-            storage.ref('images').child(img.name).getDownloadURL().then(url => {
-                console.log(url);
-                this.setState({
-                imageUrls: [url, ...this.state.imageUrls]
+            (snapshot) => {
+                // progrss function ....
+                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                this.setState({progress});
+            }, 
+            (error) => {
+                // error function ....
+                console.log(error);
+            }, 
+            () => {
+                // complete function ....
+                storage.ref('images').child(image.name).getDownloadURL().then(imageUrl => {
+                    const { creator, title, description, category, contactName, contactInfo } = this.state;
+
+        
+                fetch('http://localhost:9999/animal/create', {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({ creator, title, description, category, imageUrl, contactName, contactInfo })
+                    }).then(res=>res.json())
+                    .then(body=>{
+                        this.setState({
+                            id: body.animal._id.toString(),
+                            redirect: true
+                        })
+                    }).catch(err => console.log(err))
                 })
-            })
         });
-        })
 
-        const { creator, title, description, category, imageUrls, contactName, contactInfo } = this.state;
 
-        fetch('http://localhost:9999/animal/create', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                body: JSON.stringify({ creator, title, description, category, imageUrls, contactName, contactInfo })
-            }).then(res=>res.json())
-            .then(body=>{
-                this.setState({
-                    id: body.animal._id,
-                    redirect: true
-                })
-            }).catch(err => console.log(err))
+        
+
     }
 
     onChange = ({target}) => {
         if (target.files) {
         const images = Array.from(target.files);
         this.setState({
-            [target.name]: images
+            [target.name]: target.files[0]
         })
         } else {
         this.setState({
@@ -88,7 +87,7 @@ class App extends Component {
         }
 
         return (
-            <form onSubmit={this.onSubmit} encType="multipart/form-data" className="CreateForm">
+            <form onSubmit={this.onSubmit.bind(this)} encType="multipart/form-data" className="CreateForm">
             <h1>Create a post</h1>
             <div className="form-group">
                 <label htmlFor="image">Upload photo</label>
@@ -96,9 +95,8 @@ class App extends Component {
                     onChange={this.onChange}
                     type="file" 
                     className="form-control" 
-                    name="images" 
-                    id="images"
-                    multiple={true}
+                    name="image" 
+                    id="image"
                 />
             </div>
             <div className="form-group">
@@ -125,6 +123,7 @@ class App extends Component {
             <div className="form-group">
                 <label htmlFor="category">Select category</label>
                 <select className="form-control" onChange={this.onChange} name="category" id="category">
+                    <option disabled selected hidden>Select category</option>
                     <option value="dog">Dog</option>
                     <option value="cat">Cat</option>
                     <option value="other">Other</option>

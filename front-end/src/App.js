@@ -116,7 +116,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/animals" component={() => <Animals />} />
-              <Route exact path="/animal/:id" component={() => <Details />} />
+              <Route exact path="/animal/:id" component={Details} />
               <Route exact path="/register" render={() => <RegisterForm register={this.register} />} />
               <Route exact path="/login" component={() => <LoginForm login={this.login} />} />
               <Route exact path="/create-post" component={() => <CreateForm />} />

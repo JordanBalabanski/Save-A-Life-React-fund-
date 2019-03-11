@@ -2,21 +2,10 @@ const Animal = require('../models/Animal');
 
 module.exports = {
   getAnimals: (req, res) => {
-//     Game.find()
-//       .then((games) => {
-//         res
-//           .status(200)
-//           .json({ message: 'Fetched games successfully.', games });
-//       })
-//       .catch((error) => {
-//         if (!error.statusCode) {
-//           error.statusCode = 500;
-//         }
-//         next(error);
-//       });
     const { category } = req.params;
     const searchBy = category === 'all' ? {} : {category};
     Animal.find(searchBy)
+      .populate('creator')
       .then((animals) => {
         res
           .status(200)
@@ -31,13 +20,13 @@ module.exports = {
   },
   createAnimal: (req, res) => {
 
-    const { creator, title, description, category, imageUrls, contactName, contactInfo } = req.body;
+    const { creator, title, description, category, imageUrl, contactName, contactInfo } = req.body;
 
     Animal.create({
       creator,
       title,
       description,
-      category,imageUrls,
+      category,imageUrl,
       contactInfo,
       contactName
     }).then((animal) => {
@@ -53,21 +42,21 @@ module.exports = {
       })
     })
   },
-  getAnimalsByCategory: (req, res) => {
-    // const category = req.params.category;
-    // Game.find({categories: {
-    //   $all: [category]
-    // }})
-    //   .then((games) => {
-    //     res
-    //       .status(200)
-    //       .json({ message: `${category} games fetched.`, games })
-    //   })
-    //   .catch((error) => {
-    //     if (!error.statusCode) {
-    //       error.statusCode = 500;
-    //     }
-    //     next(error);
-    //   });
+  detailsAnimal: (req, res) => {
+    const { id } = req.params;
+
+    Animal.find()
+      .populate('creator')
+      .populate('comments')
+      .then(animal => {
+        res
+          .status(200)
+          .json(animal)
+      }).catch(error => {
+        if (!error.statusCode) {
+          error.statusCode = 500;
+        }
+        next(error);
+      })
   }
 }
