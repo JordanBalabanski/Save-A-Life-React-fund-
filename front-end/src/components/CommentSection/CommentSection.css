@@ -1,0 +1,41 @@
+.lightcoral{
+    background: lightcoral;
+}
+
+.lightblue{
+    background: lightblue;
+}
+
+.comment {
+    border: 1px solid black;
+    border-radius: 1rem;
+}
+
+.red{
+    background: red;
+}
+
+.blue{
+    background: blue;
+}
+
+.creator {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    border-radius: 0.9rem;
+}
+
+.username {
+    margin: 0.5rem 1rem;
+}
+
+.date {
+    margin: 0.5rem;
+}
+
+.content {
+    margin: 1rem;
+    text-align: left;
+}

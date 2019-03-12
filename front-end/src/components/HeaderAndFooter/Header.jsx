@@ -31,10 +31,10 @@ class Header extends Component {
                             </li></Fragment>) : null
                         }
                     </ul>
-                        <form className="form-inline my-2 my-lg-0">
+                        {/* <form className="form-inline my-2 my-lg-0">
                             <input className="form-control mr-sm-2" type="search" placeholder="Search" />
                             <button className="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-                        </form>
+                        </form> */}
                             {
                                 this.props.username ? (<ul className="navbar-nav mr-right mt-2 mt-lg-0">
                                     <li className="nav-item">

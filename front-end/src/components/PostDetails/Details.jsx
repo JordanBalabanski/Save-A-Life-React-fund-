@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import './Details.css';
 
-import './Details.css'
+import CommentSection from '../CommentSection/CommentSection';
 
 class Details extends Component {
     constructor(props) {
@@ -9,10 +10,11 @@ class Details extends Component {
             creator: null,
             title: null,
             description: null,
-            imageUrls: [],
+            imageUrl: null,
             contactName: null,
             contactInfo: null,
-            isLoading: true
+            isLoading: true,
+            id: null
         }
     }
 
@@ -22,20 +24,22 @@ class Details extends Component {
 
         fetch(`http://localhost:9999/animal/${id}`)
             .then(res => res.json())
-            .then(animal => this.setState({
+            .then(animal => {console.log(animal); this.setState({
                 isLoading: false, 
+                id: animal._id,
                 creator: animal.creator.username,
                 title: animal.title,
                 description: animal.description,
                 imageUrl: animal.imageUrl,
                 contactName: animal.contactName,
                 contactInfo: animal.contactInfo
-            }))
+            })})
             .catch(err => console.log(err))
     }
 
     render() { 
-
+        const username = sessionStorage.getItem('username');
+        const isAdmin = sessionStorage.getItem('isAdmin');
         const { creator, title, description, imageUrl, contactName, contactInfo } = this.state; 
 
         if (this.state.isLoading) {
@@ -52,9 +56,18 @@ class Details extends Component {
                     <p>Created by: {creator}</p>
                     <p>Contact name: {contactName}</p>
                     <p>Contact info: {contactInfo}</p>
+                    { username === creator ?
+                    <Fragment>
+                        <button type="button" className="btn btn-primary">Edit</button> 
+                        <button type="button" className="btn btn-danger">Delete</button>
+                    </Fragment>
+                    : isAdmin === "true" ?
+                    <button type="button" className="btn btn-danger">Delete</button>
+                    : null
+                    }
                 </section>
                 <hr />
-
+                <CommentSection article={this.state.id}/>
             </div>
         );
     }

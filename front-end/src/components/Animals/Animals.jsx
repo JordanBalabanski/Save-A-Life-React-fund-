@@ -8,26 +8,34 @@ class Animals extends Component {
         this.state = { 
             isLoading: true,
             animals: [],
+            showAnimals: []
         }
     }
 
     componentDidMount() {
         fetch('http://localhost:9999/animal/animals/all')
             .then(res => res.json())
-            .then(body => this.setState({isLoading: false, animals: body.animals}))
+            .then(body => this.setState({isLoading: false, animals: body.animals, showAnimals: body.animals}))
             .catch(err => console.log(err))
     }
 
     handleClick = (str) => {
         fetch(`http://localhost:9999/animal/animals/${str}`)
         .then(res => res.json())
-        .then(body => this.setState({isLoading: false, animals: body.animals}))
+        .then(body => this.setState({isLoading: false, animals: body.animals, showAnimals: body.animals}))
         .catch(err => console.log(err))
     }
 
+    onChange = ({target}) => {
+        const searchBy = target.value;
+        let { showAnimals, animals } = this.state;
+        showAnimals = animals.filter(animal => animal.title.toLowerCase().includes(searchBy.toLowerCase()));
+        this.setState({ showAnimals })
+    }
+    
     render() { 
 
-        const { animals } = this.state;
+        const { showAnimals } = this.state;
 
         if (this.state.isLoading) {
             return <span>Loading!...</span>
@@ -35,6 +43,7 @@ class Animals extends Component {
 
         return ( 
             <div className="album py-5 bg-light">
+            <input name="Search" onChange={this.onChange} />
             <div className="categories">
                 <button className="btn btn-primary" onClick={() => this.handleClick('all')}>All</button>
                 <button className="btn btn-primary" onClick={() => this.handleClick('cat')}>Cats</button>
@@ -44,7 +53,7 @@ class Animals extends Component {
             <div className="container">
                 <div className="row">
                 {
-                    animals.map((animal) => ((
+                    showAnimals.map((animal) => ((
                         <div className="col-md-4" key={animal._id}>
                             <Link to={`/animal/${animal._id}`} >
                             <div className="card mb-4 box-shadow">

@@ -1,4 +1,6 @@
 const Animal = require('../models/Animal');
+const User = require('../models/User');
+const Comment = require('../models/Comment');
 
 module.exports = {
   getAnimals: (req, res) => {
@@ -30,11 +32,16 @@ module.exports = {
       contactInfo,
       contactName
     }).then((animal) => {
-      res.status(200)
-        .json({
-          message: 'Post created successfully!',
-          animal
-        })
+      User.findById(creator).then(user => 
+        {user.myPosts.push(animal._id)
+        user.save()
+        .then(() => {
+          res.status(200)
+            .json({
+              message: 'Post created successfully!',
+              animal
+            })
+        })})
     }).catch((err) => {
       res.status(401)
       .json({
@@ -46,15 +53,44 @@ module.exports = {
     const { id } = req.params;
 
     Animal.findById(id)
+      .populate('creator')
       .then((animal) => {
         res
           .status(200)
           .json(animal)
-      }).catch(error => {
+      })
+  },
+  createComment: (req, res) => {
+    const { author, isAdmin, content, post } = req.body;
+
+    Comment.create({ author, isAdmin, content, post })
+      .then(comment => {
+        res.status(200)
+            .json({
+              message: 'Post created successfully!',
+              comment
+            })
+      }).catch((error) => {
         if (!error.statusCode) {
           error.statusCode = 500;
         }
         next(error);
-      })
+      });
+  },
+  getComments: (req, res) => {
+    const post = req.params.id;
+
+    Comment.find({post})
+      .then(comments => {
+        res.status(200)
+            .json(
+              comments
+            )
+      }).catch((error) => {
+        if (!error.statusCode) {
+          error.statusCode = 500;
+        }
+        next(error);
+      });
   }
 }

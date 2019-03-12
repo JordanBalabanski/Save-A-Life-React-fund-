@@ -6,6 +6,10 @@ const commentSchema = new Schema({
     type: String,
     default: 'Guest'
   },
+  isAdmin: {
+    type: String,
+    required: true
+  },  
   content: {
     type: String,
     required: true
@@ -16,8 +20,8 @@ const commentSchema = new Schema({
     ref: 'Animal'
   },
   creationDate: {
-    type: String,
-    default: `${new Date().getHours}:${new Date().getMinutes} ${new Date().getDay} ${new Date().getMonth} ${new Date().getFullYear}`
+    type: Date,
+    default: Date.now
   }
 });
 
