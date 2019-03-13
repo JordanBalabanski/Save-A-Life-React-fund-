@@ -7,7 +7,7 @@ class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            username: sessionStorage.getItem('username'),
+            username: null,
             password: null,
             error: null,
             message: null
@@ -15,6 +15,7 @@ class LoginForm extends Component {
     }
 
     onSubmit = (event) => {
+        event.preventDefault();
 
         const { username, password } = this.state;
 
@@ -28,7 +29,6 @@ class LoginForm extends Component {
     }
 
     render() { 
-        const { username } = this.state;
 
         if (sessionStorage.getItem('username')) {
             return <Redirect to='/' />
@@ -59,7 +59,7 @@ class LoginForm extends Component {
                         placeholder="Enter password" 
                     />
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" className="btn btn-primary">Login</button>
             </form>
         );
     }

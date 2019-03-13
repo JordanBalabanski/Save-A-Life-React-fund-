@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom'
 import './Details.css';
 
 import CommentSection from '../CommentSection/CommentSection';
@@ -58,8 +59,8 @@ class Details extends Component {
                     <p>Contact info: {contactInfo}</p>
                     { username === creator ?
                     <Fragment>
-                        <button type="button" className="btn btn-primary">Edit</button> 
-                        <button type="button" className="btn btn-danger">Delete</button>
+                        <Link to={`/animal/${this.state.id}/edit`} className="btn btn-primary">Edit</Link> 
+                        <Link to={`/animal/${this.state.id}/delete`} className="btn btn-danger">Delete</Link>
                     </Fragment>
                     : isAdmin === "true" ?
                     <button type="button" className="btn btn-danger">Delete</button>

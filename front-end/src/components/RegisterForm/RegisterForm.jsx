@@ -16,6 +16,7 @@ class RegisterForm extends Component {
     }
 
     onSubmit = (event) => {
+        event.preventDefault();
 
         const { username, password, confirmPassword } = this.state;
 

@@ -18,7 +18,9 @@ class CommentSection extends Component {
         })
     }
 
-    onSubmit = ({ target }) => {
+    onSubmit = (event) => {
+        event.preventDefault();
+
         const { content } = this.state
         const author = sessionStorage.getItem('username') || 'Guest';
         const isAdmin = sessionStorage.getItem('isAdmin') === 'true' || false;
@@ -45,6 +47,8 @@ class CommentSection extends Component {
 
     render() { 
 
+        const comments = this.state.comments.sort((a,b) => a.creationDate.localeCompare(b.creationDate));
+
         if (this.state.isLoading) {
             return <span>Loading!...</span>
         }
@@ -62,9 +66,9 @@ class CommentSection extends Component {
                     <button type="submit" className="btn btn-primary">Post</button>
                 </form>
                 {
-                    this.state.comments.map(comment => (
-                        <div className={ (comment.isAdmin === 'true' || comment.author === sessionStorage.getItem('username'))? "comment lightcoral" : "comment lightblue"}>
-                            <div className={ (comment.isAdmin === 'true' || comment.author === sessionStorage.getItem('username'))? "creator red" : "creator blue"}>
+                    comments.map(comment => (
+                        <div className={ (comment.isAdmin === 'true')? "comment lightcoral" : "comment lightblue"}>
+                            <div className={ (comment.isAdmin === 'true')? "creator red" : "creator blue"}>
                                 <span className="username">{comment.author}</span>
                                 <span className="date">{comment.creationDate}</span>
                             </div>

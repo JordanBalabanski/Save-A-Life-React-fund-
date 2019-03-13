@@ -22,13 +22,15 @@ module.exports = {
   },
   createAnimal: (req, res) => {
 
-    const { creator, title, description, category, imageUrl, contactName, contactInfo } = req.body;
+    const { creator, title, description, category, imageUrl, imageName, contactName, contactInfo } = req.body;
 
     Animal.create({
       creator,
       title,
       description,
-      category,imageUrl,
+      category,
+      imageName,
+      imageUrl,
       contactInfo,
       contactName
     }).then((animal) => {
@@ -92,5 +94,64 @@ module.exports = {
         }
         next(error);
       });
+  },
+  getEdit: (req, res) => {
+    const { id } = req.params;
+
+    Animal.findById(id)
+      .then((animal) => {
+        // if (req.userId===animal.creator) {
+          res
+            .status(200)
+            .json(animal)
+        // } else {
+        //   res.status(401)
+        //   .json({
+        //     message: 'Unauthorized!'
+        //   })
+        // }
+      })
+  },
+  postEdit: (req, res) => {
+    const { id } = req.params;
+
+    Animal.findById(id)
+      .then((animal) => {
+        // if (req.userId===animal.creator) {
+          const { title, description, category, contactName, contactInfo, imageName, imageUrl } = req.body;
+          if (title) {
+            animal.title = title;
+          }
+          if (description) {
+            animal.description = description;
+          }
+          if (category) {
+            animal.category = category;
+          }
+          if (contactName) {
+            animal.contactName = contactName;
+          }
+          if (contactInfo) {
+            animal.contactInfo = contactInfo;
+          }
+          if (imageUrl) {
+            animal.imageUrl = imageUrl;
+            animal.imageName = imageName;
+          }
+          animal.save()
+          .then(() => {
+            res
+            .status(200)
+            .json({
+              message: 'Edit successful!'
+            })
+          })
+        // } else {
+        //   res.status(401)
+        //   .json({
+        //     message: 'Unauthorized!'
+        //   })
+        // }
+      })
   }
 }

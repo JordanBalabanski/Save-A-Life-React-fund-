@@ -7,5 +7,7 @@ router.post('/create', animalController.createAnimal);
 router.get('/:id', animalController.detailsAnimal);
 router.post('/:id/comment', animalController.createComment);
 router.get('/:id/comments', animalController.getComments);
+router.get('/:id/edit', animalController.getEdit);
+router.post('/:id/edit', animalController.postEdit);
 
 module.exports = router;

@@ -46,7 +46,7 @@ module.exports = User;
       let users = await User.find();
       if (users.length > 0) return;
       const salt = encryption.generateSalt();
-      const hashedPassword = encryption.generateHashedPassword('123', salt);
+      const hashedPassword = encryption.generateHashedPassword(salt, '123');
       return User.create({
         salt,
         username: 'admin',

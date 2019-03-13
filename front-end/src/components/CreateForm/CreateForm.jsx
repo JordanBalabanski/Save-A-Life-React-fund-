@@ -14,7 +14,6 @@ class App extends Component {
             description: null,
             category: null,
             image: null,
-            // imageUrls: [],
             contactName: null,
             contactInfo: null,
             redirect: false
@@ -39,15 +38,16 @@ class App extends Component {
             () => {
                 // complete function ....
                 storage.ref('images').child(image.name).getDownloadURL().then(imageUrl => {
-                    const { creator, title, description, category, contactName, contactInfo } = this.state;
-
+                    const { creator, title, description, category, contactName } = this.state;
+                    const contactInfo = this.state.contactInfo || 'Sorry, the user hasn\'t provided contact info. Try the comment section below to connect.';
+                    const imageName = image.name
         
                 fetch('http://localhost:9999/animal/create', {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json',
                         },
-                        body: JSON.stringify({ creator, title, description, category, imageUrl, contactName, contactInfo })
+                        body: JSON.stringify({ creator, title, description, category, imageUrl, imageName, contactName, contactInfo })
                     }).then(res=>res.json())
                     .then(body=>{
                         this.setState({

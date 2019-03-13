@@ -20,6 +20,10 @@ const animalSchema = new Schema({
     required: true,
     enum: ['cat', 'dog', 'other']
   },
+  imageName: {
+    type: String,
+    required: true
+  },
   imageUrl: {
     type: String,
     required: true

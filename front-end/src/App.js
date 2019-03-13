@@ -10,6 +10,7 @@ import RegisterForm from './components/RegisterForm/RegisterForm';
 import LoginForm from './components/LoginForm/LoginForm';
 import CreateForm from './components/CreateForm/CreateForm';
 import Details from './components/PostDetails/Details';
+import EditForm from './components/EditForm/EditForm';
 
 import NotFound from './components/NotFound/NotFound';
 
@@ -36,7 +37,7 @@ class App extends Component {
     })
   }
 
-  login(user) {
+  login = (user) => {
     fetch(`http://localhost:9999/auth/signin`, {
         method: 'POST',
         headers: {
@@ -50,73 +51,32 @@ class App extends Component {
         sessionStorage.setItem('userId', userId);
         sessionStorage.setItem('username', username);
         sessionStorage.setItem('isAdmin', isAdmin);
-        this.setState({username: sessionStorage.getItem('username')});
+        this.setState({username: sessionStorage.getItem('username'), message});
     })
     .catch(err => console.log(err));
   }
 
-  onSubmit = (event) => {
-    event.preventDefault();
-
-    console.log('Why ???');
-    console.log(this.state);
-
-  //   fetch('http://localhost:9999/animal/create', {
-  //           method: 'POST',
-  //           headers: {
-  //               'content-type': 'application/json',
-  //           },
-  //           body: JSON.stringify(this.state)
-  //       })
-  }
-
-  onChange = ({target}) => {
-    if (target.files) {
-      const images = Array.from(target.files);
-      this.setState({
-        [target.name]: images
-      })
-    } else {
-      this.setState({
-        [target.name]: target.value
-      })
-    }
-  }
-
-  handleUpload = () => {
-    const {image} = this.state;
-
-    image.forEach(img => {
-      const uploadTask = storage.ref(`images/${img.name}`).put(img);
-      uploadTask.on('state_changed', 
-      (snapshot) => {
-        // progrss function ....
-      }, 
-      (error) => {
-        // error function ....
-        console.log(error);
-      }, 
-      () => {
-          // complete function ....
-          storage.ref('images').child(img.name).getDownloadURL().then(url => {
-            console.log(url);
-            this.setState({
-              imageUrl: [url, this.state.imageUrl]
-            })
-        })
-      });
+  logout = () => {
+    this.setState({
+      username: null,
+      isAdmin: false
     })
-}
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('isAdmin');
+  }
 
   render() {
     return (
       <div className="App">
-        <Header username={this.state.username}/>
+        <Header username={this.state.username} logout={this.logout} />
         <main>
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/animals" component={() => <Animals />} />
               <Route exact path="/animal/:id" component={Details} />
+              <Route exact path="/animal/:id/edit" component={EditForm} />
               <Route exact path="/register" render={() => <RegisterForm register={this.register} />} />
               <Route exact path="/login" component={() => <LoginForm login={this.login} />} />
               <Route exact path="/create-post" component={() => <CreateForm />} />
