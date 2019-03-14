@@ -3,7 +3,10 @@ import { Redirect } from 'react-router-dom'
 import { storage } from '../../firebase';
 import './CreateForm.css';
 
-class App extends Component {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+class CreateForm extends Component {
     constructor(props){
         super(props);
 
@@ -45,15 +48,32 @@ class App extends Component {
                 fetch('http://localhost:9999/animal/create', {
                         method: 'POST',
                         headers: {
-                            'content-type': 'application/json',
+                            'Content-Type' : 'application/json',
+                            'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
                         },
                         body: JSON.stringify({ creator, title, description, category, imageUrl, imageName, contactName, contactInfo })
                     }).then(res=>res.json())
                     .then(body=>{
-                        this.setState({
-                            id: body.animal._id.toString(),
-                            redirect: true
-                        })
+                        if (!body.animal) {
+                            toast.error(body.message, {position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true});
+                        } else {
+                            const { message } = body
+                            toast.success(message, {position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true});
+                            this.setState({
+                                id: body.animal._id.toString(),
+                                redirect: true
+                            })
+                        }
                     }).catch(err => console.log(err))
                 })
         });
@@ -157,4 +177,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default CreateForm;

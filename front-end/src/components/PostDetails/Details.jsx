@@ -63,7 +63,7 @@ class Details extends Component {
                         <Link to={`/animal/${this.state.id}/delete`} className="btn btn-danger">Delete</Link>
                     </Fragment>
                     : isAdmin === "true" ?
-                    <button type="button" className="btn btn-danger">Delete</button>
+                    <Link to={`/animal/${this.state.id}/delete`} className="btn btn-danger">Delete</Link>
                     : null
                     }
                 </section>

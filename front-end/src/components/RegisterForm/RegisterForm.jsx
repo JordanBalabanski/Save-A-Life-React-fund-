@@ -20,13 +20,7 @@ class RegisterForm extends Component {
 
         const { username, password, confirmPassword } = this.state;
 
-        if (password === confirmPassword && username) {
-            this.props.register({ username, password });
-        } else {
-            this.setState({
-                error: 'Please fill the fields correctly!'
-            })
-        }
+        this.props.register({ username, password, confirmPassword });
     }
 
     onChange = ({target}) => {

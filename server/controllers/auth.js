@@ -20,7 +20,10 @@ module.exports = {
   signUp: (req, res, next) => {
 
     if (validateUser(req, res)) {
-      const {  username, password } = req.body;
+      const {  username, password, confirmPassword } = req.body;
+      if (password !== confirmPassword) {
+        return res.status(400).json({message: 'Both passwords must match!'});
+      }
       const salt = encryption.generateSalt();
       const hashedPassword = encryption.generateHashedPassword(salt, password);
       User.create({ 

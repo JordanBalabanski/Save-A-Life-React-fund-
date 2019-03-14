@@ -20,6 +20,15 @@ module.exports = {
         next(error);
       });
   },
+  myAnimals: (req, res) => {
+    Animal.find({creator: req.userId})
+      .then(animals => {
+        res.status(200)
+            .json(
+              animals
+            )
+      })
+  },
   createAnimal: (req, res) => {
 
     const { creator, title, description, category, imageUrl, imageName, contactName, contactInfo } = req.body;
@@ -100,16 +109,16 @@ module.exports = {
 
     Animal.findById(id)
       .then((animal) => {
-        // if (req.userId===animal.creator) {
+        if (req.userId.toString()===animal.creator.toString()) { 
           res
             .status(200)
-            .json(animal)
-        // } else {
-        //   res.status(401)
-        //   .json({
-        //     message: 'Unauthorized!'
-        //   })
-        // }
+            .json({message: 'ok', animal})
+        } else {
+          res.status(401)
+          .json({
+            message: 'Unauthorized!'
+          })
+        }
       })
   },
   postEdit: (req, res) => {
@@ -117,7 +126,7 @@ module.exports = {
 
     Animal.findById(id)
       .then((animal) => {
-        // if (req.userId===animal.creator) {
+        if (req.userId.toString()===animal.creator.toString()) {
           const { title, description, category, contactName, contactInfo, imageName, imageUrl } = req.body;
           if (title) {
             animal.title = title;
@@ -146,12 +155,52 @@ module.exports = {
               message: 'Edit successful!'
             })
           })
-        // } else {
-        //   res.status(401)
-        //   .json({
-        //     message: 'Unauthorized!'
-        //   })
-        // }
+        } else {
+          res.status(401)
+          .json({
+            message: 'Unauthorized!'
+          })
+        }
       })
+  },
+  getDeletePost: async (req, res) => {
+    const { id } = req.params;
+
+    const user = await User.findById(req.userId);
+    const animal = await Animal.findById(id);
+
+    if (req.userId.toString()===animal.creator.toString() || user.isInRole('admin')) { 
+      res
+        .status(200)
+        .json({message: 'ok', animal})
+    } else {
+      res.status(401)
+      .json({
+        message: 'Unauthorized!'
+      })
+    }
+  },
+  deletePost: async (req, res) => {
+    const { id } = req.params;
+
+    const user = await User.findById(req.userId);
+    const animal = await Animal.findById(id);
+
+    if (req.userId.toString()===animal.creator.toString() || user.isInRole('admin')) { 
+
+      Animal.findByIdAndDelete(id)
+        .then(() => {
+          Comment.deleteMany({post: id})
+            .then(() => {res.status(200)
+              .json({
+                message: 'Delete successful!'
+              })})
+        })
+    } else {
+      res.status(401)
+      .json({
+        message: 'Unauthorized!'
+      })
+    }
   }
 }

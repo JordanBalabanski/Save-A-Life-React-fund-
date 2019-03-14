@@ -3,7 +3,10 @@ import { Redirect } from 'react-router-dom'
 import { storage } from '../../firebase';
 import './EditForm.css';
 
-class App extends Component {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+class EditForm extends Component {
     constructor(props){
         super(props);
 
@@ -17,6 +20,7 @@ class App extends Component {
             contactName: '',
             contactInfo: '',
             redirect: false,
+            errorRedirect: false,
             isLoading: true
         }
     }
@@ -48,32 +52,70 @@ class App extends Component {
 
             
                     fetch(`http://localhost:9999/animal/${id}/edit`, {
-                            method: 'POST',
+                            method: 'PUT',
                             headers: {
-                                'content-type': 'application/json',
+                                'Content-Type' : 'application/json',
+                                'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
                             },
                             body: JSON.stringify({ title, description, category, imageUrl, imageName, contactName, contactInfo })
                         }).then(res=>res.json())
                         .then(body=>{
-                            this.setState({
-                                redirect: true
-                            })
+                            if (body.message === 'Unauthorized!') {
+                                toast.error(body.message, {position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true})
+                                this.setState({
+                                    errorRedirect: true
+                                })
+                            } else {
+                                toast.success(body.message, {position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true})
+                                this.setState({
+                                    redirect: true
+                                })
+                            }
                         }).catch(err => console.log(err))
                     })
             });
         } else {
             const { title, description, category, contactName, contactInfo } = this.state;
             fetch(`http://localhost:9999/animal/${id}/edit`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
-                    'content-type': 'application/json',
+                    'Content-Type' : 'application/json',
+                    'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
                 },
                 body: JSON.stringify({ title, description, category, contactName, contactInfo })
             }).then(res=>res.json())
                 .then(body=>{
-                this.setState({
-                    redirect: true
-                })
+                    if (body.message === 'Unauthorized!') {
+                        toast.error(body.message, {position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true})
+                        this.setState({
+                            errorRedirect: true
+                        })
+                    } else {
+                        toast.success(body.message, {position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true})
+                        this.setState({
+                            redirect: true
+                        })
+                    }
                 }).catch(err => console.log(err))
             }
         
@@ -95,27 +137,40 @@ class App extends Component {
     componentDidMount() {
         const { id } = this.props.match.params;
 
-        fetch(`http://localhost:9999/animal/${id}/edit`, { method: 'GET', headers: { 
-            'Content-Type' : 'application/json', 
-            'Accept' : 'application/json',
-            'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
-          }})
+        fetch(`http://localhost:9999/animal/${id}/edit`, { 
+            method: 'GET', 
+            headers: {
+                'Content-Type' : 'application/json',
+                'Authorization' : `Bearer ${sessionStorage.getItem('token')}`
+            }
+            })
             .then(res => res.json())
-            .then(animal => {console.log(); this.setState({
-                isLoading: false, 
-                id: animal._id,
-                title: animal.title,
-                description: animal.description,
-                oldImageName: animal.imageName,
-                contactName: animal.contactName,
-                contactInfo: animal.contactInfo,
-            })})
+            .then(body => { 
+                const {message, animal} = body;
+                if(animal){
+                    this.setState({
+                    isLoading: false, 
+                    id: animal._id,
+                    title: animal.title,
+                    description: animal.description,
+                    oldImageName: animal.imageName,
+                    contactName: animal.contactName,
+                    contactInfo: animal.contactInfo,
+                    })
+                } else {
+                    this.setState({errorRedirect:true});
+                }
+            })
             .catch(err => console.log(err))
         }
 
     render() {
 
         const { title, description, contactName, contactInfo } = this.state; 
+
+        if (this.state.errorRedirect) {
+            return <Redirect to="/" />
+        }
 
         if (this.state.redirect) {
             return <Redirect to={`/animal/${this.state.id}`} />
@@ -196,4 +251,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default EditForm;
