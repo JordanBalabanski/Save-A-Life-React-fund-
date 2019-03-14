@@ -41,7 +41,7 @@ class Header extends Component {
                                         <span className="nav-link">Welcome, {this.props.username}!</span>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink className="nav-link" to="#" onClick={() => this.props.logout()}>Logout</NavLink>
+                                        <NavLink className="nav-link" to="/" onClick={() => this.props.logout()}>Logout</NavLink>
                                     </li>
                                 </ul>) :
                                 (<ul className="navbar-nav mr-right mt-2 mt-lg-0">
