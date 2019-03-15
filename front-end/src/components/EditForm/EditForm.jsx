@@ -6,6 +6,8 @@ import './EditForm.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import MDSpinner from "react-md-spinner";
+
 class EditForm extends Component {
     constructor(props){
         super(props);
@@ -177,7 +179,7 @@ class EditForm extends Component {
         }
 
         if (this.state.isLoading) {
-            return <span>Loading!...</span>
+            return <MDSpinner size={50}/>
         }
 
         return (

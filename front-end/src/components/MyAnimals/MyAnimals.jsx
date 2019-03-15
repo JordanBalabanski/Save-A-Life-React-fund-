@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom'
 
+import MDSpinner from "react-md-spinner";
+
 class MyAnimals extends Component {
     constructor(props) {
         super(props);
@@ -32,7 +34,7 @@ class MyAnimals extends Component {
         }
 
         if (this.state.isLoading) {
-            return <span>Loading!...</span>
+            return <MDSpinner size={50}/>
         }
 
         return ( 

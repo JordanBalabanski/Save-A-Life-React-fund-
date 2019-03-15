@@ -6,6 +6,8 @@ import './DeleteForm.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import MDSpinner from "react-md-spinner";
+
 class DeleteForm extends Component {
     constructor(props){
         super(props);
@@ -118,7 +120,7 @@ class DeleteForm extends Component {
         }
 
         if (this.state.isLoading) {
-            return <span>Loading!...</span>
+            return <MDSpinner size={50}/>
         }
 
         return (
